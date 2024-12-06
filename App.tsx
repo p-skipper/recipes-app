@@ -10,6 +10,7 @@ import { UserPage } from "./src/pages/UserPage";
 import { ForgotPasswordPage } from "./src/pages/ForgotPasswordPage";
 import { CreateAccountPage } from "./src/pages/CreateAccountPage";
 import { CategoryProvider } from "./src/context/CategoryContext";
+import { ColorModeProvider } from "./src/context/ColorModeContext";
 import Icon from "react-native-vector-icons/FontAwesome6";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Header } from "./src/components/Header";
@@ -94,13 +95,15 @@ const Navigation = () => (
 export default function App() {
   return (
     <AuthProvider>
-      <CategoryProvider>
-        <SafeAreaProvider>
-          <NavigationContainer>
-            <Navigation />
-          </NavigationContainer>
-        </SafeAreaProvider>
-      </CategoryProvider>
+      <ColorModeProvider>
+        <CategoryProvider>
+          <SafeAreaProvider>
+            <NavigationContainer>
+              <Navigation />
+            </NavigationContainer>
+          </SafeAreaProvider>
+        </CategoryProvider>
+      </ColorModeProvider>
     </AuthProvider>
   );
 }

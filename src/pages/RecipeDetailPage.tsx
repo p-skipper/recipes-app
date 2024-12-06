@@ -4,7 +4,6 @@ import {
   Text,
   Image,
   ScrollView,
-  StyleSheet,
   TouchableOpacity,
   Modal,
 } from "react-native";
@@ -14,11 +13,15 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CheckBox } from "react-native-elements";
 import Icon6 from "@expo/vector-icons/FontAwesome6";
+import { useColorMode } from "../context/ColorModeContext";
 
 // Constante para armazenar a chave usada no AsyncStorage
 const FAVORITES_KEY = "favorites";
 
 export const RecipeDetailPage = () => {
+  const { isDarkMode } = useColorMode();
+  const styles = globalStyles(isDarkMode);
+
   const route = useRoute(); // Acesso aos parâmetros da navegação
   const { recipe } = route.params; // Obtém os detalhes da receita passada na navegação
 
@@ -70,49 +73,37 @@ export const RecipeDetailPage = () => {
     <View style={{ flex: 1 }}>
       <ScrollView style={styles.container}>
         {/* Imagem da receita */}
-        <Image source={{ uri: recipe.imagem }} style={styles.image} />
-        <Text style={styles.title}>{recipe.titulo}</Text>
+        <Image source={{ uri: recipe.imagem }} style={styles.imageDetail} />
+        <Text style={styles.titleDetail}>{recipe.titulo}</Text>
 
         {/* Detalhes da receita */}
         <View style={{ flexDirection: "row", gap: 10 }}>
           {/* Informações sobre tempo e dificuldade */}
-          <View
-            style={[
-              globalStyles.titleRow,
-              globalStyles.detailsContainer,
-              { flex: 2, backgroundColor: "#001529" },
-            ]}
-          >
-            <View style={globalStyles.iconDetail}>
+          <View style={[styles.titleRow, styles.detailsContainer, { flex: 2 }]}>
+            <View style={styles.iconDetail}>
               <Icon name="clock" size={18} color="white" />
-              <Text style={[globalStyles.timeText, { fontWeight: "bold" }]}>
+              <Text style={[styles.timeText, { fontWeight: "bold" }]}>
                 {recipe.tempo} min
               </Text>
             </View>
-            <View style={globalStyles.iconDetail}>
+            <View style={styles.iconDetail}>
               <Icon name="equalizer" size={18} color="white" />
-              <Text style={[globalStyles.timeText, { fontWeight: "bold" }]}>
+              <Text style={[styles.timeText, { fontWeight: "bold" }]}>
                 {recipe.dificuldade}
               </Text>
             </View>
           </View>
 
           {/* Botão de favoritar/desfavoritar */}
-          <View
-            style={[
-              globalStyles.titleRow,
-              globalStyles.detailsContainer,
-              { flex: 1, backgroundColor: "#001529" },
-            ]}
-          >
+          <View style={[styles.titleRow, styles.detailsContainer, { flex: 1 }]}>
             <TouchableOpacity onPress={toggleFavorite}>
-              <View style={globalStyles.iconDetail}>
+              <View style={styles.iconDetail}>
                 <Icon
                   name={isFavorited ? "bookmark" : "bookmark-outline"}
                   size={18}
                   color="white"
                 />
-                <Text style={[globalStyles.timeText, { fontWeight: "bold" }]}>
+                <Text style={[styles.timeText, { fontWeight: "bold" }]}>
                   {isFavorited ? "Favoritado" : "Favoritar"}
                 </Text>
               </View>
@@ -121,30 +112,21 @@ export const RecipeDetailPage = () => {
         </View>
 
         {/* Descrição da receita */}
-        <Text style={styles.description}>{recipe.descricao}</Text>
+        <Text style={styles.descriptionDetail}>{recipe.descricao}</Text>
 
         {/* Seção de ingredientes */}
-        <View
-          style={[
-            globalStyles.titleRow,
-            globalStyles.detailsContainer,
-            { backgroundColor: "#001529" },
-          ]}
-        >
-          <View style={globalStyles.iconDetail}>
+        <View style={[styles.titleRow, styles.detailsContainer]}>
+          <View style={styles.iconDetail}>
             <Icon name="clipboard-list-outline" size={20} color="white" />
             <Text
-              style={[
-                globalStyles.timeText,
-                { fontWeight: "bold", fontSize: 15 },
-              ]}
+              style={[styles.timeText, { fontWeight: "bold", fontSize: 15 }]}
             >
               Ingredientes
             </Text>
           </View>
-          <View style={globalStyles.iconDetail}>
+          <View style={styles.iconDetail}>
             <Icon name="account-group" size={18} color="white" />
-            <Text style={[globalStyles.timeText, { fontWeight: "bold" }]}>
+            <Text style={[styles.timeText, { fontWeight: "bold" }]}>
               {recipe.porcao} {recipe.porcao === 1 ? "Porção" : "Porções"}
             </Text>
           </View>
@@ -164,11 +146,14 @@ export const RecipeDetailPage = () => {
                 }}
               >
                 <Text
-                  style={{
-                    textDecorationLine: ingredientUsed[ingredient]
-                      ? "line-through"
-                      : "none", // Riscado se marcado
-                  }}
+                  style={[
+                    styles.stepText,
+                    {
+                      textDecorationLine: ingredientUsed[ingredient]
+                        ? "line-through"
+                        : "none", // Riscado se marcado
+                    },
+                  ]}
                 >
                   {ingredient}: {quantity}
                 </Text>
@@ -181,10 +166,18 @@ export const RecipeDetailPage = () => {
                     margin: 0,
                   }}
                   uncheckedIcon={
-                    <Icon6 name="square" size={18} color="black" />
+                    <Icon6
+                      name="square"
+                      size={18}
+                      color={isDarkMode ? "white" : "black"}
+                    />
                   }
                   checkedIcon={
-                    <Icon6 name="square-check" size={18} color="black" />
+                    <Icon6
+                      name="square-check"
+                      size={18}
+                      color={isDarkMode ? "white" : "black"}
+                    />
                   }
                   onPress={() => toggleIngredientUsed(ingredient)} // Marca/desmarca ingrediente
                 />
@@ -196,18 +189,15 @@ export const RecipeDetailPage = () => {
         {/* Seção de modo de preparo */}
         <View
           style={[
-            globalStyles.titleRow,
-            globalStyles.detailsContainer,
-            { backgroundColor: "#062E56" },
+            styles.titleRow,
+            styles.detailsContainer,
+            { backgroundColor: isDarkMode ? "#36A9E1" : "#001529" },
           ]}
         >
-          <View style={globalStyles.iconDetail}>
+          <View style={styles.iconDetail}>
             <Icon name="pot-steam-outline" size={20} color="white" />
             <Text
-              style={[
-                globalStyles.timeText,
-                { fontWeight: "bold", fontSize: 15 },
-              ]}
+              style={[styles.timeText, { fontWeight: "bold", fontSize: 15 }]}
             >
               Modo de Preparo
             </Text>
@@ -234,6 +224,10 @@ export const RecipeDetailPage = () => {
             </View>
           ))}
         </View>
+        <Image
+          source={{ uri: recipe.imagem }}
+          style={[styles.imageDetail, { marginBottom: 40 }]}
+        />
       </ScrollView>
       {/* Floating button */}
       <TouchableOpacity style={styles.floatingButton} onPress={toggleModal}>
@@ -303,88 +297,3 @@ export const RecipeDetailPage = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-  },
-  image: {
-    width: "100%",
-    height: 200,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  description: {
-    fontSize: 16,
-    marginBottom: 20,
-  },
-  stepNumberContainer: {
-    marginRight: 20,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#36A9E1",
-    width: 30,
-    height: 30,
-    borderRadius: 100,
-  },
-  stepNumber: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#001529",
-  },
-  stepTextContainer: {
-    flex: 1,
-  },
-  stepText: {
-    fontSize: 16,
-    flexWrap: "wrap",
-  },
-  floatingButton: {
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-    backgroundColor: "#36A9E1",
-    borderRadius: 30,
-    width: 50,
-    height: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 5,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  modalContent: {
-    backgroundColor: "white",
-    borderRadius: 10,
-    padding: 20,
-    width: "90%",
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  modalItem: {
-    marginBottom: 10,
-  },
-  closeButton: {
-    marginTop: 20,
-    backgroundColor: "#36A9E1",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  closeButtonText: {
-    color: "white",
-    fontWeight: "bold",
-  },
-});

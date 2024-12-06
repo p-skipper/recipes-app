@@ -20,6 +20,7 @@ import { useCategory } from "../context/CategoryContext";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { globalStyles } from "../../global/globalStyles";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useColorMode } from "../context/ColorModeContext";
 
 // Constante para armazenar a chave usada no AsyncStorage
 const FAVORITES_KEY = "favorites";
@@ -32,6 +33,9 @@ const removeAccents = (str: string) =>
     .toLowerCase();
 
 export const RecipePage = () => {
+  const { isDarkMode } = useColorMode();
+  const styles = globalStyles(isDarkMode);
+
   const { category, setCategory } = useCategory();
   const navigation = useNavigation();
 
@@ -175,7 +179,7 @@ export const RecipePage = () => {
   };
 
   return (
-    <View style={globalStyles.container}>
+    <View style={styles.container}>
 
       {/* Área de busca, botão de favoritos e filtro */}
       <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
@@ -184,19 +188,20 @@ export const RecipePage = () => {
           placeholderTextColor={"black"}
           value={search}
           onChangeText={setSearch}
-          style={[globalStyles.input, { height: 35, width: 250 }]}
+          style={[styles.input, { height: 35, width: 250 }]}
         />
 
         <TouchableOpacity onPress={() => setShowFavoritesOnly((prev) => !prev)}>
           <Icon
             name={showFavoritesOnly ? "bookmark" : "bookmark-outline"}
             size={30}
-            color={showFavoritesOnly ? "#062E56" : "#062E56"}
+            color={isDarkMode ? "#36A9E1" : "#062E56"}
           />
         </TouchableOpacity>
 
         <TouchableOpacity onPress={() => setFilterModalVisible(true)}>
-          <Icon name="filter-outline" size={30} color="#062E56" />
+          <Icon name="filter-outline" size={30} color={isDarkMode ? "#36A9E1" : "#062E56"}
+ />
         </TouchableOpacity>
       </View>
 
@@ -207,14 +212,14 @@ export const RecipePage = () => {
         transparent={true}
         onRequestClose={() => setFilterModalVisible(false)}
       >
-        <View style={globalStyles.modalOverlay}>
-          <View style={globalStyles.modalContent}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
             <ScrollView
               contentContainerStyle={styles.scrollViewContent}
               showsVerticalScrollIndicator={false}
             >
-              <View style={globalStyles.titleContainer}>
-                <Text style={globalStyles.modalTitle}>Filtrar Receitas</Text>
+              <View style={styles.titleContainer}>
+                <Text style={styles.modalTitle}>Filtrar Receitas</Text>
                 <Icon
                   name="alpha-x-circle-outline"
                   size={25}
@@ -293,25 +298,25 @@ export const RecipePage = () => {
                 <View style={styles.recipeCard}>
                   <Image
                     source={{ uri: item.imagem }}
-                    style={globalStyles.image}
+                    style={styles.image}
                   />
-                  <View style={globalStyles.content}>
-                    <View style={globalStyles.titleRow}>
-                      <Text style={globalStyles.title}>{item.titulo}</Text>
-                      <View style={globalStyles.iconDetail}>
+                  <View style={styles.content}>
+                    <View style={styles.titleRow}>
+                      <Text style={styles.title}>{item.titulo}</Text>
+                      <View style={styles.iconDetail}>
                         <Icon
                           name="clock"
                           size={16}
                           color="#36A9E1"
-                          style={globalStyles.icon}
+                          style={styles.icon}
                         />
-                        <Text style={[globalStyles.timeText, {color: "#36A9E1"}]}>
+                        <Text style={[styles.timeText, {color: "#36A9E1"}]}>
                           {item.tempo} min
                         </Text>
                       </View>
                     </View>
                     <Text
-                      style={globalStyles.description}
+                      style={styles.description}
                       numberOfLines={3}
                       ellipsizeMode="tail"
                     >
@@ -337,47 +342,3 @@ export const RecipePage = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  scrollViewContent: {
-    paddingTop: 10,
-  },
-  filterLabel: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginVertical: 10,
-  },
-  checkboxContainer: {
-    marginBottom: 10,
-    paddingLeft: 0,
-  },
-  checkboxText: {
-    fontSize: 16,
-  },
-  emptyText: {
-    textAlign: "center",
-    fontSize: 16,
-    color: "#7f8c8d",
-    marginTop: 20,
-  },
-  recipeCard: {
-    marginBottom: 20,
-    backgroundColor: "#001529",
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-    borderLeftColor: "#062E56",
-    borderLeftWidth: 7,
-    flexDirection: "row",
-    height: 120,
-    position: "relative",
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  bookmarkContainer: {
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-  },
-});

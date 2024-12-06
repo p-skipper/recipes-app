@@ -13,8 +13,12 @@ import { globalStyles } from "../../global/globalStyles";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
+import { useColorMode } from "../context/ColorModeContext";
 
 export const CreateAccountPage: React.FC = () => {
+  const { isDarkMode } = useColorMode();
+  const styles = globalStyles(isDarkMode);
+
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   const handleBackToLogin = () => {
@@ -82,21 +86,21 @@ export const CreateAccountPage: React.FC = () => {
   );
   
   return (
-    <SafeAreaView style={globalStyles.container}>
-      <View style={globalStyles.formContainer}>
-        <Text style={[globalStyles.title, { fontSize: 20, margin: 10 }]}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.formContainer}>
+        <Text style={[styles.title, { fontSize: 20, margin: 10 }]}>
           Crie uma nova conta
         </Text>
         <View>
           <View>
             {successMessage ? (
-              <Text style={[globalStyles.successText, { marginBottom: 10 }]}>
+              <Text style={[styles.successText, { marginBottom: 10 }]}>
                 {successMessage}
               </Text>
             ) : null}
-            <Text style={globalStyles.label}>Nome:</Text>
+            <Text style={styles.label}>Nome:</Text>
             <TextInput
-              style={[globalStyles.input]}
+              style={[styles.input]}
               placeholder="Insira o seu nome"
               placeholderTextColor={"black"}
               value={name}
@@ -104,10 +108,10 @@ export const CreateAccountPage: React.FC = () => {
                 setName(text);
               }}
             />
-            <Text style={globalStyles.label}>E-mail:</Text>
+            <Text style={styles.label}>E-mail:</Text>
             <TextInput
               style={[
-                globalStyles.input,
+                styles.input,
                 emailError ? { marginBottom: 0 } : {}, // Ajusta margem caso haja mensagem de erro
               ]}
               placeholder="Insira o seu e-mail"
@@ -120,16 +124,16 @@ export const CreateAccountPage: React.FC = () => {
               }}
             />
             {emailError ? (
-              <Text style={[globalStyles.errorText, { marginBottom: 10 }]}>
+              <Text style={[styles.errorText, { marginBottom: 10 }]}>
                 {emailError}
               </Text>
             ) : null}
           </View>
           <View>
-            <Text style={globalStyles.label}>Senha:</Text>
+            <Text style={styles.label}>Senha:</Text>
             <TextInput
               style={[
-                globalStyles.input,
+                styles.input,
                 passwordError ? { marginBottom: 0 } : {}, // Ajusta margem caso haja mensagem de erro
               ]}
               placeholder="Insira a sua senha"
@@ -143,19 +147,19 @@ export const CreateAccountPage: React.FC = () => {
               }}
             />
             {passwordError ? (
-              <Text style={[globalStyles.errorText, { marginBottom: 10 }]}>
+              <Text style={[styles.errorText, { marginBottom: 10 }]}>
                 {passwordError}
               </Text>
             ) : null}
           </View>
           <TouchableOpacity onPress={handleSend}>
-            <View style={globalStyles.button}>
-              <Text style={globalStyles.buttonText}>Criar conta</Text>
+            <View style={styles.button}>
+              <Text style={styles.buttonText}>Criar conta</Text>
             </View>
           </TouchableOpacity>
         </View>
       </View>
-      <View style={[globalStyles.bottomContainer, { flexDirection: "row" }]}>
+      <View style={[styles.bottomContainer, { flexDirection: "row" }]}>
         <Text style={{ color: "white" }}>Já possui uma conta? </Text>
         <TouchableOpacity onPress={handleBackToLogin}>
           <Text style={{ color: "white", textDecorationLine: "underline" }}>Voltar para login</Text>

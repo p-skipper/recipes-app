@@ -11,8 +11,12 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../App";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useColorMode } from "../context/ColorModeContext";
 
 export const ForgotPasswordPage: React.FC = () => {
+  const { isDarkMode } = useColorMode();
+  const styles = globalStyles(isDarkMode);
+
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   // Estados para gerenciar o formulário
@@ -29,24 +33,26 @@ export const ForgotPasswordPage: React.FC = () => {
     // Resetar mensagens
     setEmailError("");
     setSuccessMessage("");
-  
+
     // Regex para validação de e-mail
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  
+
     if (!emailRegex.test(email)) {
       setEmailError("Por favor, insira um e-mail válido.");
       return;
     }
-  
+
     try {
       // Obter os usuários do AsyncStorage
-      const storedUsers = JSON.parse(await AsyncStorage.getItem("users") || "[]");
-  
+      const storedUsers = JSON.parse(
+        (await AsyncStorage.getItem("users")) || "[]"
+      );
+
       // Verificar se o e-mail existe
       const userExists = storedUsers.some(
         (u: { email: string }) => u.email === email
       );
-  
+
       if (!userExists) {
         setEmailError("E-mail não registrado.");
       } else {
@@ -56,7 +62,9 @@ export const ForgotPasswordPage: React.FC = () => {
       }
     } catch (error) {
       console.error(error);
-      setEmailError("Ocorreu um erro ao enviar a solicitação. Tente novamente.");
+      setEmailError(
+        "Ocorreu um erro ao enviar a solicitação. Tente novamente."
+      );
     }
   };
 
@@ -68,19 +76,19 @@ export const ForgotPasswordPage: React.FC = () => {
       setSuccessMessage("");
     }, [])
   );
-  
+
   return (
-    <SafeAreaView style={globalStyles.container}>
-      <View style={globalStyles.formContainer}>
-        <Text style={[globalStyles.title, { fontSize: 20, margin: 10 }]}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.formContainer}>
+        <Text style={[styles.title, { fontSize: 20, margin: 10 }]}>
           Esqueceu sua senha?
         </Text>
         <View>
           <View>
-            <Text style={globalStyles.label}>E-mail:</Text>
+            <Text style={styles.label}>E-mail:</Text>
             <TextInput
               style={[
-                globalStyles.input,
+                styles.input,
                 emailError || successMessage ? { marginBottom: 0 } : {}, // Ajusta margem caso haja mensagem
               ]}
               placeholder="Insira o seu e-mail"
@@ -95,30 +103,30 @@ export const ForgotPasswordPage: React.FC = () => {
               autoCapitalize="none"
             />
             {emailError ? (
-              <Text style={[globalStyles.errorText, { marginBottom: 10 }]}>
+              <Text style={[styles.errorText, { marginBottom: 10 }]}>
                 {emailError}
               </Text>
             ) : null}
             {successMessage ? (
-              <Text style={[globalStyles.successText, { marginBottom: 10 }]}>
+              <Text style={[styles.successText, { marginBottom: 10 }]}>
                 {successMessage}
               </Text>
             ) : null}
           </View>
-          <View style={globalStyles.details}>
+          <View style={styles.details}>
             <TouchableOpacity onPress={handleBackToLogin}>
               <Text style={{ color: "white" }}>« Voltar para login</Text>
             </TouchableOpacity>
           </View>
 
           <TouchableOpacity onPress={handleSend}>
-            <View style={globalStyles.button}>
-                <Text style={globalStyles.buttonText}>Enviar</Text>
+            <View style={styles.button}>
+              <Text style={styles.buttonText}>Enviar</Text>
             </View>
           </TouchableOpacity>
         </View>
       </View>
-      <View style={globalStyles.bottomContainer}>
+      <View style={styles.bottomContainer}>
         <Text style={{ color: "white", textAlign: "center" }}>
           Insira seu endereço de e-mail e enviaremos instruções sobre como criar
           uma nova senha.

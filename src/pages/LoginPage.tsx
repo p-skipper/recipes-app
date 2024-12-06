@@ -15,8 +15,12 @@ import { CheckBox } from "react-native-elements";
 import Icon from "@expo/vector-icons/FontAwesome6";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React from "react";
+import { useColorMode } from "../context/ColorModeContext";
 
 export const LoginPage: React.FC = () => {
+  const { isDarkMode } = useColorMode();
+  const styles = globalStyles(isDarkMode);
+
   const authContext = useAuth();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
@@ -105,17 +109,17 @@ export const LoginPage: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={globalStyles.container}>
-      <View style={globalStyles.formContainer}>
-        <Text style={[globalStyles.title, { fontSize: 20, margin: 10 }]}>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.formContainer}>
+        <Text style={[styles.title, { fontSize: 20, margin: 10 }]}>
           Faça login na sua conta
         </Text>
         <View>
           <View>
-            <Text style={globalStyles.label}>E-mail:</Text>
+            <Text style={styles.label}>E-mail:</Text>
             <TextInput
               style={[
-                globalStyles.input,
+                styles.input,
                 emailError ? { marginBottom: 0 } : {}, // Ajusta margem caso haja mensagem de erro
               ]}
               placeholder="Insira o seu e-mail"
@@ -128,16 +132,16 @@ export const LoginPage: React.FC = () => {
               }}
             />
             {emailError ? (
-              <Text style={[globalStyles.errorText, { marginBottom: 10 }]}>
+              <Text style={[styles.errorText, { marginBottom: 10 }]}>
                 {emailError}
               </Text>
             ) : null}
           </View>
           <View>
-            <Text style={globalStyles.label}>Senha:</Text>
+            <Text style={styles.label}>Senha:</Text>
             <TextInput
               style={[
-                globalStyles.input,
+                styles.input,
                 passwordError ? { marginBottom: 0 } : {}, // Ajusta margem caso haja mensagem de erro
               ]}
               placeholder="Insira a sua senha"
@@ -150,12 +154,12 @@ export const LoginPage: React.FC = () => {
               }}
             />
             {passwordError ? (
-              <Text style={[globalStyles.errorText, { marginBottom: 10 }]}>
+              <Text style={[styles.errorText, { marginBottom: 10 }]}>
                 {passwordError}
               </Text>
             ) : null}
           </View>
-          <View style={globalStyles.details}>
+          <View style={styles.details}>
             <CheckBox
               containerStyle={{
                 backgroundColor: "transparent",
@@ -179,13 +183,13 @@ export const LoginPage: React.FC = () => {
           </View>
 
           <TouchableOpacity onPress={validateAndLogin}>
-            <View style={globalStyles.button}>
-              <Text style={globalStyles.buttonText}>Entrar</Text>
+            <View style={styles.button}>
+              <Text style={styles.buttonText}>Entrar</Text>
             </View>
           </TouchableOpacity>
         </View>
       </View>
-      <View style={[globalStyles.bottomContainer, { flexDirection: "row" }]}>
+      <View style={[styles.bottomContainer, { flexDirection: "row" }]}>
         <Text style={{ color: "white" }}>Novo Usuário? </Text>
         <TouchableOpacity onPress={handleCreateAccount}>
           <Text style={{ color: "white", textDecorationLine: "underline" }}>Criar Conta</Text>
